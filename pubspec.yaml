@@ -35,6 +35,42 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
 
+  # Firebase Core & Services
+  firebase_core: ^3.6.0
+  firebase_auth: ^5.3.1
+  cloud_firestore: ^5.4.4
+  firebase_analytics: ^11.3.3
+  firebase_messaging: ^15.1.3
+  firebase_storage: ^12.3.3
+
+  # Authentication
+  google_sign_in: ^6.2.1
+
+  # State Management
+  flutter_riverpod: ^2.6.1
+
+  # Network
+  http: ^1.2.2
+
+  # Payment (optional client-side SDKs — uncomment as needed)
+  # razorpay_flutter: ^1.3.7
+  # stripe_checkout: ^1.0.0
+
+  # Utilities
+  intl: ^0.19.0
+  collection: ^1.18.0
+  path: ^1.9.0
+  crypto: ^3.0.5
+
+  # Routing
+  go_router: ^14.2.0
+
+  # UI
+  google_fonts: ^6.2.1
+  shimmer: ^3.0.0
+  cached_network_image: ^3.4.1
+  lottie: ^3.1.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

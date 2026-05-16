@@ -1,0 +1,81 @@
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "functions": {
+    "predeploy": [
+      "npm --prefix \"$RESOURCE_DIR\" run lint",
+      "npm --prefix \"$RESOURCE_DIR\" run build"
+    ],
+    "source": "functions"
+  },
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  },
+  "auth": {
+    "anonymous": false,
+    "providers": [
+      {
+        "provider": "email",
+        "signInMethod": "password",
+        "enabled": true
+      },
+      {
+        "provider": "google.com",
+        "signInMethod": "google.com",
+        "enabled": true
+      },
+      {
+        "provider": "apple.com",
+        "signInMethod": "apple.com",
+        "enabled": true
+      }
+    ]
+  },
+  "storage": {
+    "rules": "storage.rules",
+    "bucket": "parenthero-app.firebasestorage.app"
+  },
+  "remoteconfig": {
+    "template": "remoteconfig.template.json"
+  },
+  "analytics": {
+    "enabled": true
+  },
+  "emulators": {
+    "auth": {
+      "port": 9099
+    },
+    "functions": {
+      "port": 5001
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "hosting": {
+      "port": 5000
+    },
+    "storage": {
+      "port": 9199
+    },
+    "ui": {
+      "enabled": true,
+      "port": 4000
+    }
+  },
+  "dataconnect": {
+    "enabled": false
+  }
+}

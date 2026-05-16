@@ -1,0 +1,176 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper: check if the user is authenticated
+    function isAuthenticated() {
+      return request.auth != null && request.auth.uid != null;
+    }
+
+    // Helper: check if the authenticated user is the owner of the resource
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Helper: check if the authenticated user is the parent of a child
+    function isParentOf(childId) {
+      return isAuthenticated()
+        && exists(/databases/$(database)/documents/children/$(childId))
+        && get(/databases/$(database)/documents/children/$(childId)).data.parentId == request.auth.uid;
+    }
+
+    // Helper: check if the authenticated user is the owner of a campaign
+    function isCampaignOwner(campaignId) {
+      // campaignId format: {childId}_{topicId}
+      let childId = campaignId.split('_')[0];
+      return isParentOf(childId);
+    }
+
+    // === users collection ===
+    match /users/{userId} {
+      // Users can read/write only their own document
+      allow read, write: if isOwner(userId);
+
+      // Allow user creation during signup (unauthenticated)
+      allow create: if request.auth == null
+        || request.auth.uid == userId;
+
+      // Validation on write
+      allow write: if isOwner(userId)
+        && request.resource.data.keys().hasAll(['name', 'email', 'createdAt'])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.email is string
+        && request.resource.data.email.matches('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$');
+    }
+
+    // === children collection ===
+    match /children/{childId} {
+      // Parents can read their own children
+      allow read: if isAuthenticated()
+        && (resource.data.parentId == request.auth.uid);
+
+      // Parents can create children
+      allow create: if isAuthenticated()
+        && request.resource.data.parentId == request.auth.uid;
+
+      // Parents can update/delete their own children
+      allow update, delete: if isAuthenticated()
+        && resource.data.parentId == request.auth.uid;
+
+      // Validation on write
+      allow write: if request.resource.data.keys().hasAll(['parentId', 'name', 'grade', 'createdAt'])
+        && request.resource.data.parentId is string
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.grade is int
+        && request.resource.data.grade >= 1
+        && request.resource.data.grade <= 5;
+    }
+
+    // === topics collection (read-only for authenticated users) ===
+    match /topics/{topicId} {
+      // Any authenticated user can read topics
+      allow read: if isAuthenticated();
+
+      // Only admins/service accounts can write topics
+      allow create, update, delete: if false;
+    }
+
+    // === campaigns collection ===
+    match /campaigns/{campaignId} {
+      // Parents can read campaigns for their children
+      allow read: if isAuthenticated()
+        && (resource.data.childId == request.auth.uid
+            || exists(/databases/$(database)/documents/children/$(resource.data.childId))
+               && get(/databases/$(database)/documents/children/$(resource.data.childId)).data.parentId == request.auth.uid);
+
+      // Parents can create campaigns for their children
+      allow create: if isAuthenticated()
+        && request.resource.data.childId is string
+        && exists(/databases/$(database)/documents/children/$(request.resource.data.childId))
+        && get(/databases/$(database)/documents/children/$(request.resource.data.childId)).data.parentId == request.auth.uid;
+
+      // Parents can update campaigns for their children
+      allow update: if isAuthenticated()
+        && resource.data.childId is string
+        && exists(/databases/$(database)/documents/children/$(resource.data.childId))
+        && get(/databases/$(database)/documents/children/$(resource.data.childId)).data.parentId == request.auth.uid;
+
+      // Only parents can delete their children's campaigns
+      allow delete: if isAuthenticated()
+        && resource.data.childId is string
+        && exists(/databases/$(database)/documents/children/$(resource.data.childId))
+        && get(/databases/$(database)/documents/children/$(resource.data.childId)).data.parentId == request.auth.uid;
+
+      // Validation
+      allow write: if request.resource.data.keys().hasAll(['childId', 'topicId', 'startedAt', 'status'])
+        && request.resource.data.childId is string
+        && request.resource.data.topicId is string
+        && request.resource.data.status in ['active', 'completed', 'paused'];
+    }
+
+    // === content collection ===
+    match /content/{contentId} {
+      // Authenticated users can read content
+      allow read: if isAuthenticated();
+
+      // Only functions/service accounts can write content
+      allow create, update, delete: if request.auth != null
+        && (request.auth.uid == 'service-account' || request.auth.token.firebase.sign_in_provider == 'cloudfunctions');
+    }
+
+    // === certificates collection ===
+    match /certificates/{certId} {
+      // Parents can read certificates for their children
+      allow read: if isAuthenticated()
+        && (resource.data.childId is string
+            && exists(/databases/$(database)/documents/children/$(resource.data.childId))
+            && get(/databases/$(database)/documents/children/$(resource.data.childId)).data.parentId == request.auth.uid);
+
+      // Functions/service accounts can create certificates
+      allow create: if request.auth != null
+        && (request.auth.uid == 'service-account' || request.auth.token.firebase.sign_in_provider == 'cloudfunctions');
+
+      // Parents can update their children's certificates (e.g., mark as shared)
+      allow update: if isAuthenticated()
+        && resource.data.childId is string
+        && exists(/databases/$(database)/documents/children/$(resource.data.childId))
+        && get(/databases/$(database)/documents/children/$(resource.data.childId)).data.parentId == request.auth.uid;
+
+      // No deletion of certificates
+      allow delete: if false;
+    }
+
+    // === payments collection (functions-only) ===
+    match /payments/{paymentId} {
+      allow read: if isAuthenticated()
+        && resource.data.userId == request.auth.uid;
+      allow create, update, delete: if request.auth != null
+        && (request.auth.uid == 'service-account' || request.auth.token.firebase.sign_in_provider == 'cloudfunctions');
+    }
+
+    // === analytics events (functions-only) ===
+    match /analytics/{eventId} {
+      allow read, write: if false;
+    }
+
+    // === notifications collection ===
+    match /notifications/{notificationId} {
+      allow read: if isAuthenticated()
+        && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated()
+        && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated()
+        && resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated()
+        && resource.data.userId == request.auth.uid;
+    }
+
+    // Deny all other access
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

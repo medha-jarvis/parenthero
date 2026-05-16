@@ -1,0 +1,54 @@
+rules_version = '2';
+
+// ParentHero Storage Security Rules
+// Only authenticated users can access their own data
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Helper: check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper: check if user owns the path
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // User avatars and profile images
+    match /users/{userId}/{allPaths=**} {
+      allow read: if true; // public read for avatars
+      allow write: if isOwner(userId)
+        && request.resource.size < 5 * 1024 * 1024 // 5MB limit
+        && request.resource.contentType.matches('image/.*');
+    }
+
+    // Child avatars
+    match /avatars/{childId}/{allPaths=**} {
+      allow read: if true; // public read for avatars
+      allow write: if isAuthenticated()
+        && request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+    }
+
+    // Certificate PDFs
+    match /certificates/{childId}/{allPaths=**} {
+      allow read: if true; // public read for sharing certificates
+      allow write: if isAuthenticated()
+        && request.resource.size < 10 * 1024 * 1024 // 10MB limit
+        && request.resource.contentType == 'application/pdf';
+    }
+
+    // Public assets
+    match /public/{allPaths=**} {
+      allow read: if true;
+      allow write: if false; // admins only
+    }
+
+    // All other files
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
