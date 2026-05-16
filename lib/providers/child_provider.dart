@@ -11,7 +11,7 @@ import 'auth_provider.dart';
 
 /// Represents a child profile.
 class ChildProfile {
-  const ChildProfile({
+  ChildProfile({
     required this.id,
     required this.parentId,
     required this.name,

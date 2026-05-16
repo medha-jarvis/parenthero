@@ -14,9 +14,9 @@ class PlansScreen extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 16),
-            Text('Unlock Unlimited Learning!', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold, textAlign: TextAlign.center)),
+            Text('Unlock Unlimited Learning!', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            Text('Start your 7-day free trial', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary, textAlign: TextAlign.center)),
+            Text('Start your 7-day free trial', textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary)),
             const SizedBox(height: 24),
             _buildPlanCard(context, 'Monthly', '₹499', '/month', ['Unlimited topics', 'All subjects', 'Practice & quizzes', 'Certificates'], AppColors.mathBlue, false),
             _buildPlanCard(context, 'Annual', '₹4,999', '/year', ['Everything in Monthly', '2 months free', 'Family sharing (3 kids)', 'Priority support'], AppColors.scienceGreen, true),

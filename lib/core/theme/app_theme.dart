@@ -319,7 +319,6 @@ class AppTheme {
         foregroundColor: AppColors.primary,
         side: const BorderSide(color: AppColors.primary, width: 2),
         disabledForegroundColor: AppColors.disabled,
-        disabledBorderColor: AppColors.disabled,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
@@ -340,7 +339,6 @@ class AppTheme {
         foregroundColor: AppColors.primaryLight,
         side: const BorderSide(color: AppColors.primaryLight, width: 2),
         disabledForegroundColor: AppColors.disabled,
-        disabledBorderColor: AppColors.disabled,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),

@@ -13,7 +13,7 @@ class ArcadeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(AppStrings.arcade),
+        title: Text('Arcade'),
       ),
       body: SafeArea(
         child: Padding(

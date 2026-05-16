@@ -135,7 +135,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
               children: [
                 const SizedBox(height: 40),
                 Icon(
-                  Icons.auto_stars_rounded,
+                  Icons.auto_awesome,
                   size: 64,
                   color: AppColors.primary,
                 ),

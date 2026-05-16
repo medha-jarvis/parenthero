@@ -187,7 +187,7 @@ class _BeatParentScreenState extends ConsumerState<BeatParentScreen>
                         const SizedBox(height: 4),
                         Text(
                           '$_kidScore',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 32,
                             fontWeight: FontWeight.w800,
                             color: _isKidsTurn
@@ -207,7 +207,7 @@ class _BeatParentScreenState extends ConsumerState<BeatParentScreen>
                     ),
                     child: Text(
                       'Round ${_currentRound + 1}/$_maxRounds',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 13,
                       ),
@@ -221,7 +221,7 @@ class _BeatParentScreenState extends ConsumerState<BeatParentScreen>
                         const SizedBox(height: 4),
                         Text(
                           '$_parentScore',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 32,
                             fontWeight: FontWeight.w800,
                             color: !_isKidsTurn
@@ -271,7 +271,7 @@ class _BeatParentScreenState extends ConsumerState<BeatParentScreen>
                     },
                     child: Text(
                       '$_randNumA $_operator $_randNumB = ?',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 36,
                         fontWeight: FontWeight.w800,
                         color: AppColors.textPrimary,

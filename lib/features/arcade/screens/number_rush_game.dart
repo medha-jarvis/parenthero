@@ -52,7 +52,7 @@ class _NumberRushGameState extends State<NumberRushGame> {
       opts.add(_correctAnswer + rng.nextInt(10) - 5);
     }
     _options.clear();
-    _options.addAll(opts..shuffle());
+    _options.addAll(opts.toList()..shuffle());
   }
 
   void _tapAnswer(int answer) {
@@ -78,7 +78,7 @@ class _NumberRushGameState extends State<NumberRushGame> {
             child: Center(
               child: Text(
                 '$_timeLeft s',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
                   color: _timeLeft <= 10 ? AppColors.error : AppColors.primary,

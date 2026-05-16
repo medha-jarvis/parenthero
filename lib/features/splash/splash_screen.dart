@@ -81,8 +81,8 @@ class _SplashScreenState extends State<SplashScreen>
                       ),
                     ],
                   ),
-                  child: const Icon(
-                    Icons.auto_stars_rounded,
+                  child: Icon(
+                    Icons.auto_awesome,
                     size: 50,
                     color: AppColors.primary,
                   ),

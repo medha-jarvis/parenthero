@@ -18,7 +18,7 @@ class SettingsScreen extends ConsumerWidget {
         children: [
           _buildSection(context, 'Profile', [
             _buildTile(Icons.person, 'Edit Profile', () {}),
-            _buildTile(Icons.children, 'Manage Children', () {}),
+            _buildTile(Icons.people, 'Manage Children', () {}),
           ]),
           const SizedBox(height: 16),
           _buildSection(context, 'Subscription', [

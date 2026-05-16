@@ -84,7 +84,7 @@ class CertificateShareSheet extends StatelessWidget {
               const SizedBox(height: 12),
               _buildShareOption(
                 context,
-                icon: Icons.whatsapp,
+                icon: Icons.share,
                 label: 'Share on WhatsApp',
                 color: const Color(0xFF25D366),
               ),

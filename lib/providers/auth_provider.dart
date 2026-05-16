@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -269,6 +270,4 @@ class AuthActions {
   Future<void> deleteAccount() => _notifier.deleteAccount();
 }
 
-/// Re-export FieldValue for use in providers.
-// ignore: non_constant_identifier_names
-dynamic get FieldValue => FirebaseFirestore.instance;
+

@@ -28,7 +28,7 @@ class DayViewScreen extends ConsumerWidget {
       data: (campaign) {
         if (campaign == null) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Day $day')),
+            appBar: AppBar(title: Text('Day $day')),
             body: const Center(child: Text('Campaign not found')),
           );
         }

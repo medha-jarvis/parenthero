@@ -24,8 +24,7 @@ import 'features/arcade/screens/sort_it_game.dart';
 import 'features/arcade/screens/word_builder_game.dart';
 import 'features/subscription/screens/plans_screen.dart';
 import 'features/subscription/screens/paywall_screen.dart';
-import 'features/parent_dashboard/screens/analytics_screen.dart';
-import 'features/search/screens/topic_search_screen.dart';
+// analytics_screen and topic_search_screen — not yet built
 import 'features/settings/screens/settings_screen.dart';
 import 'providers/auth_provider.dart';
 
@@ -170,14 +169,7 @@ final _routerProvider = Provider<GoRouter>((ref) {
         path: '/subscription/paywall',
         builder: (context, state) => const PaywallScreen(),
       ),
-      GoRoute(
-        path: '/analytics',
-        builder: (context, state) => const AnalyticsScreen(),
-      ),
-      GoRoute(
-        path: '/search',
-        builder: (context, state) => const TopicSearchScreen(),
-      ),
+      // /analytics and /search routes — not yet built
       GoRoute(
         path: '/settings',
         builder: (context, state) => const SettingsScreen(),
